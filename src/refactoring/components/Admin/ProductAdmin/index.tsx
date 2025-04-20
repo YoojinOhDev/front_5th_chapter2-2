@@ -1,6 +1,6 @@
 import { Product } from '../../../../types.ts';
 import { AddProduct } from './components/AddProduct';
-import { ProductList } from './components/ProductList';
+import { EachProduct } from './components/EachProduct';
 
 interface Props {
   products: Product[];
@@ -17,7 +17,16 @@ export const ProductAdmin = ({
     <div id={'상품관리'}>
       <h2 className='text-2xl font-semibold mb-4'>상품 관리</h2>
       <AddProduct onProductAdd={onProductAdd} />
-      <ProductList products={products} onProductUpdate={onProductUpdate} />
+
+      <div className='space-y-2'>
+        {products.map((product: Product, index: number) => (
+          <EachProduct
+            onProductUpdate={onProductUpdate}
+            product={product}
+            index={index}
+          />
+        ))}
+      </div>
     </div>
   );
 };
