@@ -34,6 +34,7 @@ const typeAndFormatter: TypeAndFormatter = {
   },
 };
 
+//todo: editProduct 와 함께 쓸수 있는 위치로 디렉토리 이동
 export const formInputFields: FormInputField[] = [
   {
     ...typeAndFormatter.text,

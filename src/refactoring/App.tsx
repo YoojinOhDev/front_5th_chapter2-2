@@ -2,8 +2,8 @@ import { useState } from 'react';
 import { CartPage } from './components/CartPage.tsx';
 import { AdminPage } from './components/AdminPage.tsx';
 import { useCoupons, useProducts } from './hooks';
-import { initialCoupons } from './data/coupons.ts';
-import { initialProducts } from './data/products.ts';
+import { initialCoupons } from './data/initialCoupons.ts';
+import { initialProducts } from './data/initialProducts.ts';
 import { Nav } from './components/Nav';
 
 const App = () => {

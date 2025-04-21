@@ -1,16 +1,12 @@
 import { useState } from 'react';
 import { Coupon } from '../../../../types.ts';
+import { defaultNewCoupon } from './data.ts';
 
 interface Props {
   coupons: Coupon[];
   onCouponAdd: (newCoupon: Coupon) => void;
 }
-const defaultNewCoupon: Coupon = {
-  name: '',
-  code: '',
-  discountType: 'percentage',
-  discountValue: 0,
-};
+
 export const CouponAdmin = ({ coupons, onCouponAdd }: Props) => {
   const [newCoupon, setNewCoupon] = useState<Coupon>(defaultNewCoupon);
 
