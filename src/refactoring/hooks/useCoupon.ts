@@ -12,9 +12,9 @@ export const useCoupons = (
 } => {
   const [coupons, setCoupons] = useState<Coupon[]>(initialCoupons);
 
-  const addCoupon = (newCoupon: Coupon): void => {
+  function addCoupon(newCoupon: Coupon): void {
     setCoupons((prevCoupons) => [...prevCoupons, newCoupon]);
-  };
+  }
 
   return {
     coupons,

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-export function useTogglePage() {
+export const useTogglePage = () => {
   const [isAdmin, setIsAdmin] = useState(false);
 
   function switchPage() {
@@ -11,4 +11,4 @@ export function useTogglePage() {
     isAdmin,
     switchPage,
   };
-}
+};
