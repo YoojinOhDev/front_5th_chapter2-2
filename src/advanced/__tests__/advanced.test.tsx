@@ -3,7 +3,11 @@ import { describe, expect, test } from 'vitest';
 import { act, fireEvent, render, screen, within } from '@testing-library/react';
 import { CartPage } from '../../refactoring/components/CartPage';
 import { AdminPage } from "../../refactoring/components/AdminPage";
-import { Coupon, Product } from '../../types';
+import { Coupon, Product, Cart, Discount } from '../../types';
+import { convertToLocaleString, getPercent, getFullNumberPercent } from '../../refactoring/utils';
+import { findCartItemById, makeCartItem, addNewItemToCart, removeItemFromCart } from '../../refactoring/models/cart';
+import { discountAmount } from '../../refactoring/models/coupons';
+import { updateProduct, addProduct, hasDiscount, addDiscountToProduct, removeDiscountFromProduct } from '../../refactoring/models/products';
 
 const mockProducts: Product[] = [
   {
@@ -232,11 +236,227 @@ describe('advanced > ', () => {
   })
 
   describe('자유롭게 작성해보세요.', () => {
-    test('새로운 유틸 함수를 만든 후에 테스트 코드를 작성해서 실행해보세요', () => {
-      expect(true).toBe(false);
-    })
+    describe('utils.ts 함수 테스트', () => {
+      test('convertToLocaleString 함수는 숫자를 로케일 문자열로 변환해야 한다', () => {
+        expect(convertToLocaleString(1000)).toBe('1,000');
+        expect(convertToLocaleString(1000000)).toBe('1,000,000');
+        expect(convertToLocaleString(0)).toBe('0');
+        expect(convertToLocaleString(-1000)).toBe('-1,000');
+      });
 
-    test('새로운 hook 함수르 만든 후에 테스트 코드를 작성해서 실행해보세요', () => {
+      test('getPercent 함수는 소수를 백분율로 변환해야 한다', () => {
+        expect(getPercent(0.1)).toBe(10);
+        expect(getPercent(0.25)).toBe(25);
+        expect(getPercent(1)).toBe(100);
+        expect(getPercent(0)).toBe(0);
+      });
+
+      test('getFullNumberPercent 함수는 소수를 정수 백분율 문자열로 변환해야 한다', () => {
+        expect(getFullNumberPercent(0.1)).toBe('10');
+        expect(getFullNumberPercent(0.256)).toBe('26');
+        expect(getFullNumberPercent(1)).toBe('100');
+        expect(getFullNumberPercent(0)).toBe('0');
+      });
+    });
+
+    describe('models/cart.ts 함수 테스트', () => {
+      const mockProduct1: Product = {
+        id: 'test1',
+        name: '테스트 상품1',
+        price: 10000,
+        stock: 10,
+        discounts: [{ quantity: 5, rate: 0.1 }]
+      };
+
+      const mockProduct2: Product = {
+        id: 'test2',
+        name: '테스트 상품2',
+        price: 20000,
+        stock: 5,
+        discounts: []
+      };
+
+      const mockCart: Cart = [
+        { product: mockProduct1, quantity: 2 },
+        { product: mockProduct2, quantity: 1 }
+      ];
+
+      test('findCartItemById 함수는 카트에서 상품을 찾아야 한다', () => {
+        const found = findCartItemById(mockCart, 'test1');
+        const notFound = findCartItemById(mockCart, 'nonexistent');
+
+        expect(found).toBeDefined();
+        expect(found?.product.id).toBe('test1');
+        expect(found?.quantity).toBe(2);
+        expect(notFound).toBeUndefined();
+
+        // 원본 객체와 다른 참조를 반환하는지 확인
+        const foundItem = findCartItemById(mockCart, 'test1');
+        expect(foundItem).not.toBe(mockCart[0]);
+      });
+
+      test('makeCartItem 함수는 새로운 장바구니 아이템을 생성해야 한다', () => {
+        const cartItem = makeCartItem(mockProduct1, 3);
+
+        expect(cartItem).toEqual({
+          product: mockProduct1,
+          quantity: 3
+        });
+      });
+
+      test('addNewItemToCart 함수는 새로운 상품을 장바구니에 추가해야 한다', () => {
+        const newProduct: Product = {
+          id: 'test3',
+          name: '테스트 상품3',
+          price: 30000,
+          stock: 8,
+          discounts: []
+        };
+
+        const updatedCart = addNewItemToCart(mockCart, newProduct);
+
+        expect(updatedCart).toHaveLength(mockCart.length + 1);
+        expect(updatedCart[updatedCart.length - 1]).toEqual({
+          product: newProduct,
+          quantity: 1
+        });
+        
+        // 원본 카트가 변경되지 않았는지 확인
+        expect(mockCart).toHaveLength(2);
+      });
+
+      test('removeItemFromCart 함수는 장바구니에서 상품을 제거해야 한다', () => {
+        const updatedCart = removeItemFromCart(mockCart, 'test1');
+
+        expect(updatedCart).toHaveLength(mockCart.length - 1);
+        expect(updatedCart.find(item => item.product.id === 'test1')).toBeUndefined();
+        expect(updatedCart.find(item => item.product.id === 'test2')).toBeDefined();
+        
+        // 존재하지 않는 상품 ID로 제거 시도
+        const sameCart = removeItemFromCart(mockCart, 'nonexistent');
+        expect(sameCart).toHaveLength(mockCart.length);
+        
+        // 원본 카트가 변경되지 않았는지 확인
+        expect(mockCart).toHaveLength(2);
+      });
+    });
+
+    describe('models/coupons.ts 함수 테스트', () => {
+      test('discountAmount 함수는 쿠폰의 할인 정보를 문자열로 반환해야 한다', () => {
+        const amountCoupon: Coupon = {
+          name: '5000원 할인',
+          code: 'AMOUNT5000',
+          discountType: 'amount',
+          discountValue: 5000
+        };
+
+        const percentageCoupon: Coupon = {
+          name: '10% 할인',
+          code: 'PERCENT10',
+          discountType: 'percentage',
+          discountValue: 10
+        };
+
+        expect(discountAmount(amountCoupon)).toBe('5000원');
+        expect(discountAmount(percentageCoupon)).toBe('10%');
+      });
+    });
+
+    describe('models/products.ts 함수 테스트', () => {
+      const mockProduct1: Product = {
+        id: 'test1',
+        name: '테스트 상품1',
+        price: 10000,
+        stock: 10,
+        discounts: [{ quantity: 5, rate: 0.1 }]
+      };
+
+      const mockProduct2: Product = {
+        id: 'test2',
+        name: '테스트 상품2',
+        price: 20000,
+        stock: 5,
+        discounts: []
+      };
+
+      const mockProducts = [mockProduct1, mockProduct2];
+
+      test('updateProduct 함수는 상품 목록에서 특정 상품을 업데이트해야 한다', () => {
+        const updatedProduct = {
+          ...mockProduct1,
+          price: 15000,
+          stock: 15
+        };
+
+        const newProducts = updateProduct(mockProducts, updatedProduct);
+
+        expect(newProducts).toHaveLength(mockProducts.length);
+        expect(newProducts.find(p => p.id === 'test1')?.price).toBe(15000);
+        expect(newProducts.find(p => p.id === 'test1')?.stock).toBe(15);
+        expect(newProducts.find(p => p.id === 'test2')).toEqual(mockProduct2);
+        
+        // 원본 배열이 변경되지 않았는지 확인
+        expect(mockProducts[0].price).toBe(10000);
+      });
+
+      test('addProduct 함수는 상품 목록에 새로운 상품을 추가해야 한다', () => {
+        const newProduct: Product = {
+          id: 'test3',
+          name: '테스트 상품3',
+          price: 30000,
+          stock: 8,
+          discounts: []
+        };
+
+        const newProducts = addProduct(mockProducts, newProduct);
+
+        expect(newProducts).toHaveLength(mockProducts.length + 1);
+        expect(newProducts[newProducts.length - 1]).toEqual(newProduct);
+        
+        // 원본 배열이 변경되지 않았는지 확인
+        expect(mockProducts).toHaveLength(2);
+      });
+
+      test('hasDiscount 함수는 상품의 할인 여부를 반환해야 한다', () => {
+        expect(hasDiscount(mockProduct1)).toBe(true);
+        expect(hasDiscount(mockProduct2)).toBe(false);
+      });
+
+      test('addDiscountToProduct 함수는 상품에 새로운 할인을 추가해야 한다', () => {
+        const newDiscount: Discount = { quantity: 3, rate: 0.05 };
+        const updatedProduct = addDiscountToProduct(mockProduct2, newDiscount);
+
+        expect(updatedProduct.discounts).toHaveLength(1);
+        expect(updatedProduct.discounts[0]).toEqual(newDiscount);
+        
+        // 원본 객체가 변경되지 않았는지 확인
+        expect(mockProduct2.discounts).toHaveLength(0);
+      });
+
+      test('removeDiscountFromProduct 함수는 상품에서 특정 할인을 제거해야 한다', () => {
+        const productWithMultipleDiscounts: Product = {
+          ...mockProduct1,
+          discounts: [
+            { quantity: 5, rate: 0.1 },
+            { quantity: 10, rate: 0.2 }
+          ]
+        };
+
+        const updatedProduct = removeDiscountFromProduct(productWithMultipleDiscounts, 0);
+
+        expect(updatedProduct.discounts).toHaveLength(1);
+        expect(updatedProduct.discounts[0]).toEqual({ quantity: 10, rate: 0.2 });
+        
+        // 원본 객체가 변경되지 않았는지 확인
+        expect(productWithMultipleDiscounts.discounts).toHaveLength(2);
+        
+        // 존재하지 않는 인덱스로 제거 시도
+        const sameProduct = removeDiscountFromProduct(mockProduct2, 0);
+        expect(sameProduct.discounts).toHaveLength(0);
+      });
+    });
+
+    test('새로운 hook 함수를 만든 후에 테스트 코드를 작성해서 실행해보세요', () => {
       expect(true).toBe(false);
     })
   })
