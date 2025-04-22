@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Coupon } from '../../../../types.ts';
 import { defaultNewCoupon } from './data.ts';
+import { discountAmount } from '../../../models/coupons.ts';
 
 interface Props {
   coupons: Coupon[];
@@ -79,10 +80,7 @@ export const CouponAdmin = ({ coupons, onCouponAdd }: Props) => {
                 className='bg-gray-100 p-2 rounded'
               >
                 {coupon.name} ({coupon.code}):
-                {coupon.discountType === 'amount'
-                  ? `${coupon.discountValue}원`
-                  : `${coupon.discountValue}%`}{' '}
-                할인
+                {discountAmount(coupon)} 할인
               </div>
             ))}
           </div>

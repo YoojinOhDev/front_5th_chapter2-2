@@ -1,6 +1,7 @@
 import { Dispatch, SetStateAction } from 'react';
 import { Product } from '../../../../../../../../../../types.ts';
 import { useHandleNewDiscount } from './hooks.ts';
+import { getPercent } from '../../../../../../../../../utils.ts';
 
 interface Props {
   newProduct: Product;
@@ -36,7 +37,7 @@ export const EditDiscount = ({
       {newProduct.discounts.map((discount, index) => (
         <div key={index} className='flex justify-between items-center mb-2'>
           <span>
-            {discount.quantity}개 이상 구매 시 {discount.rate * 100}% 할인
+            {discount.quantity}개 이상 구매 시 {getPercent(discount.rate)}% 할인
           </span>
           <button
             onClick={() => handleRemoveDiscount(index)}

@@ -1,12 +1,6 @@
 import { useState } from 'react';
 import { Product } from '../../types.ts';
-
-//계산
-function updateProduct(products: Product[], newProduct: Product) {
-  return products.map((product) =>
-    product.id === newProduct.id ? newProduct : product,
-  );
-}
+import { addProduct, updateProduct } from '../models/products.ts';
 
 export const useProducts = (initialProducts: Product[]) => {
   const [products, setProducts] = useState(initialProducts);
@@ -16,6 +10,6 @@ export const useProducts = (initialProducts: Product[]) => {
     updateProduct: (newProduct: Product) =>
       setProducts((prev) => updateProduct(prev, newProduct)),
     addProduct: (newProduct: Product) =>
-      setProducts((prev) => [...prev, newProduct]),
+      setProducts((prev) => addProduct(prev, newProduct)),
   };
 };

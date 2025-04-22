@@ -1,5 +1,7 @@
-import { Cart, CartItem } from '../../../../types.ts';
+import { Cart } from '../../../../types.ts';
 import { RemoveFromCart, UpdateQuantity } from '../../../hooks';
+import { getFullNumberPercent } from '../../../utils.ts';
+import { getMaxApplicableDiscount } from '../../../models/cart.ts';
 
 interface Props {
   cart: Cart;
@@ -12,25 +14,12 @@ export const CartDisplay = ({
   removeFromCart,
   updateQuantity,
 }: Props) => {
-  const getAppliedDiscount = (item: CartItem) => {
-    const { discounts } = item.product;
-    const { quantity } = item;
-    let appliedDiscount = 0;
-    for (const discount of discounts) {
-      if (quantity >= discount.quantity) {
-        appliedDiscount = Math.max(appliedDiscount, discount.rate);
-      }
-    }
-    return appliedDiscount;
-  };
-
   return (
     <>
       <h2 className='text-2xl font-semibold mb-4'>장바구니 내역</h2>
-
       <div className='space-y-2'>
         {cart.map((item) => {
-          const appliedDiscount = getAppliedDiscount(item);
+          const appliedDiscount = getMaxApplicableDiscount(item);
           return (
             <div
               key={item.product.id}
@@ -43,7 +32,7 @@ export const CartDisplay = ({
                   {item.product.price}원 x {item.quantity}
                   {appliedDiscount > 0 && (
                     <span className='text-green-600 ml-1'>
-                      ({(appliedDiscount * 100).toFixed(0)}% 할인 적용)
+                      ({getFullNumberPercent(appliedDiscount)}% 할인 적용)
                     </span>
                   )}
                 </span>

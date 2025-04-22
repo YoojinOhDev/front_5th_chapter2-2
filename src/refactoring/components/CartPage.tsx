@@ -43,7 +43,6 @@ export const CartPage = ({ products, coupons }: Props) => {
             applyCoupon={applyCoupon}
             selectedCoupon={selectedCoupon}
           />
-
           <Summary totalPrices={calculateCartTotal(cart, selectedCoupon)} />
         </div>
       </div>

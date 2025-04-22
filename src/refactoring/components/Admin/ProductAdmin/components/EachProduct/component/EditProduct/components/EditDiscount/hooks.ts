@@ -1,14 +1,7 @@
 import { useState } from 'react';
 import { Discount, Product } from '../../../../../../../../../../types.ts';
 import { defaultDiscount } from './data.ts';
-
-const addDiscountToProduct = (
-  product: Product,
-  newDiscount: Discount,
-): Product => ({
-  ...product,
-  discounts: [...product.discounts, newDiscount],
-});
+import { addDiscountToProduct } from '../../../../../../../../../models/products.ts';
 
 export function useHandleNewDiscount(
   newProduct: Product,
@@ -21,12 +14,14 @@ export function useHandleNewDiscount(
     saveProduct(addDiscountToProduct(newProduct, newDiscount));
     setNewDiscount(defaultDiscount);
   };
+
   function handleNewDiscount(key: 'quantity' | 'rate', newValue: number) {
     setNewDiscount((prev) => ({
       ...prev,
       [key]: newValue,
     }));
   }
+
   return {
     newDiscount,
     handleAddDiscount,
