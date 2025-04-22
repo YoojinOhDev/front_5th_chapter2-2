@@ -2,10 +2,10 @@ import { Product } from '../../../../../../types.ts';
 import { Dispatch, SetStateAction, useState } from 'react';
 import { defaultProduct } from '../../data.ts';
 
-export function useGetProductAddHandler(
+export const useGetProductAddHandler = (
   onProductAdd: (newProduct: Product) => void,
   setShowNewProductForm: Dispatch<SetStateAction<boolean>>,
-) {
+) => {
   const [newProduct, setNewProduct] =
     useState<Omit<Product, 'id'>>(defaultProduct);
 
@@ -18,4 +18,4 @@ export function useGetProductAddHandler(
     setShowNewProductForm(false);
   };
   return { newProduct, setNewProduct, handleAddNewProduct };
-}
+};

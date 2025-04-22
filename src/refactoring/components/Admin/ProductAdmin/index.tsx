@@ -8,11 +8,7 @@ interface Props {
   onProductAdd: (newProduct: Product) => void;
 }
 
-export const ProductAdmin = ({
-  products,
-  onProductUpdate,
-  onProductAdd,
-}: Props) => {
+export const ProductAdmin = ({ products, onProductUpdate, onProductAdd }: Props) => {
   return (
     <div id={'상품관리'}>
       <h2 className='text-2xl font-semibold mb-4'>상품 관리</h2>
@@ -29,4 +25,4 @@ export const ProductAdmin = ({
       </div>
     </div>
   );
-};
+}

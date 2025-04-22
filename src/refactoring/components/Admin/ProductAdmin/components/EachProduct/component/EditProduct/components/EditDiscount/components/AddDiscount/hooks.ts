@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Discount } from '../../../../../../../../../../../../types.ts';
 import { defaultDiscount } from '../../data.ts';
 
-export function useDiscountForm() {
+export const useDiscountForm = () => {
   const [newDiscount, setNewDiscount] = useState<Discount>(defaultDiscount);
 
   const updateDiscountField = (key: 'quantity' | 'rate', newValue: number) => {
@@ -21,4 +21,4 @@ export function useDiscountForm() {
     updateDiscountField,
     resetDiscountForm,
   };
-}
+};

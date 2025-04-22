@@ -14,10 +14,10 @@ const getNewProduct = (product: Product, key: string, value: any): Product => {
   };
 };
 
-export function useHandleNewProduct(
+export const useHandleNewProduct = (
   product: Product,
   onProductUpdate: (updatedProduct: Product) => void,
-) {
+) => {
   const [newProduct, setNewProduct] = useState<Product>(product);
 
   function handleUpdate(
@@ -36,7 +36,6 @@ export function useHandleNewProduct(
   return {
     newProduct,
     handleUpdate,
-
     setNewProduct,
   };
-}
+};

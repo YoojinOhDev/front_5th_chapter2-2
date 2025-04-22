@@ -22,6 +22,7 @@ export const EditProduct = ({
   function handleClickEditDone() {
     saveEditing(newProduct);
   }
+
   return (
     <div>
       {/* 상품 기본 정보 (이름, 가격, 재고)  수정 부분*/}

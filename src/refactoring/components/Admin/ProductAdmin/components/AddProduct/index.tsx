@@ -56,4 +56,4 @@ export const AddProduct = ({ onProductAdd }: Props) => {
       )}
     </div>
   );
-};
+}
