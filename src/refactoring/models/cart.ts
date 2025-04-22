@@ -90,9 +90,7 @@ export const findCartItemById = (
   return foundItem ? { ...foundItem } : undefined;
 };
 
-export function makeCartItem(product: Product, quantity: number) {
-  return { product, quantity };
-}
+export const makeCartItem = (product: Product, quantity: number) => ({ product, quantity });
 
 export const addNewItemToCart = (prevCart: Cart, product: Product): Cart => [
   ...prevCart,

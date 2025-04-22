@@ -1,10 +1,5 @@
-export function convertToLocaleString(num: number): string {
-  return num.toLocaleString();
-}
-export function getPercent(소수: number) {
-  return 소수 * 100;
-}
+export const convertToLocaleString = (num: number): string => num.toLocaleString();
 
-export function getFullNumberPercent(소수: number) {
-  return getPercent(소수).toFixed(0);
-}
+export const getPercent = (소수: number) => 소수 * 100;
+
+export const getFullNumberPercent = (소수: number) => getPercent(소수).toFixed(0);
