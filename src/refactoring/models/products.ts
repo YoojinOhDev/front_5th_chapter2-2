@@ -22,3 +22,8 @@ export const addDiscountToProduct = (
   ...product,
   discounts: [...product.discounts, newDiscount],
 });
+
+export const removeDiscountFromProduct = (product: Product, index: number) => ({
+  ...product,
+  discounts: product.discounts.filter((_, i) => i !== index),
+});

@@ -1,7 +1,7 @@
 import { useHandleNewProduct } from './hooks.ts';
 import { Product } from '../../../../../../../../types.ts';
 import { EditDiscount } from './components/EditDiscount';
-import { formInputFields } from '../../../AddProduct/data.ts';
+import { formInputFields } from '../../../../data.ts';
 
 interface Props {
   onProductUpdate: (updatedProduct: Product) => void;

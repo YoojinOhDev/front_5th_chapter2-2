@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Product } from '../../../../../../types.ts';
 import { useGetProductAddHandler } from './hooks.ts';
-import { formInputFields } from './data.ts';
+import { formInputFields } from '../../data.ts';
 
 interface Props {
   onProductAdd: (newProduct: Product) => void;
