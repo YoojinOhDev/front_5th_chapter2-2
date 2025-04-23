@@ -1,7 +1,6 @@
-import { useState } from 'react';
 import { Coupon } from '../../../../types.ts';
-import { defaultNewCoupon } from './data.ts';
 import { discountAmount } from '../../../models/coupons.ts';
+import { useCouponAdmin } from './hook.ts';
 
 interface Props {
   coupons: Coupon[];
@@ -9,16 +8,8 @@ interface Props {
 }
 
 export const CouponAdmin = ({ coupons, onCouponAdd }: Props) => {
-  const [newCoupon, setNewCoupon] = useState<Coupon>(defaultNewCoupon);
-
-  const handleAddCoupon = () => {
-    onCouponAdd(newCoupon);
-    setNewCoupon(defaultNewCoupon);
-  };
-
-  function handleChangeCoupon(fieldName: string, value: string | number) {
-    setNewCoupon({ ...newCoupon, [fieldName]: value });
-  }
+  const { newCoupon, handleAddCoupon, changeCouponHandler } =
+    useCouponAdmin(onCouponAdd);
 
   return (
     <div id={'쿠폰 관리'}>
@@ -29,25 +20,20 @@ export const CouponAdmin = ({ coupons, onCouponAdd }: Props) => {
             type='text'
             placeholder='쿠폰 이름'
             value={newCoupon.name}
-            onChange={(e) => handleChangeCoupon('name', e.target.value)}
+            onChange={changeCouponHandler('name')}
             className='w-full p-2 border rounded'
           />
           <input
             type='text'
             placeholder='쿠폰 코드'
             value={newCoupon.code}
-            onChange={(e) => handleChangeCoupon('code', e.target.value)}
+            onChange={changeCouponHandler('code')}
             className='w-full p-2 border rounded'
           />
           <div className='flex gap-2'>
             <select
               value={newCoupon.discountType}
-              onChange={(e) =>
-                handleChangeCoupon(
-                  'discountType',
-                  e.target.value as 'amount' | 'percentage',
-                )
-              }
+              onChange={changeCouponHandler('discountType')}
               className='w-full p-2 border rounded'
             >
               <option value='amount'>금액(원)</option>
@@ -57,9 +43,7 @@ export const CouponAdmin = ({ coupons, onCouponAdd }: Props) => {
               type='number'
               placeholder='할인 값'
               value={newCoupon.discountValue}
-              onChange={(e) =>
-                handleChangeCoupon('discountValue', parseInt(e.target.value))
-              }
+              onChange={changeCouponHandler('discountValue')}
               className='w-full p-2 border rounded'
             />
           </div>
