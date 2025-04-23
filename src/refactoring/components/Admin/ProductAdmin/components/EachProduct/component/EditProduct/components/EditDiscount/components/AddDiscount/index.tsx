@@ -8,11 +8,12 @@ interface Props {
   setNewProduct: Dispatch<SetStateAction<Product>>;
   onProductUpdate: (updatedProduct: Product) => void;
 }
-export function AddNewDiscount({
+
+export const AddNewDiscount = ({
   newProduct,
   setNewProduct,
   onProductUpdate,
-}: Props) {
+}: Props) => {
   const { newDiscount, updateDiscountField, resetDiscountForm } =
     useDiscountForm();
 
@@ -51,4 +52,4 @@ export function AddNewDiscount({
       </button>
     </div>
   );
-}
+};
