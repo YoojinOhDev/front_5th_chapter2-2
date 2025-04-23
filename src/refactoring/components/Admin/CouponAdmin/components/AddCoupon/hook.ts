@@ -1,7 +1,7 @@
 import { ChangeEvent, useState } from 'react';
-import { Coupon } from '../../../../types.ts';
-import { defaultNewCoupon } from './data.ts';
-import { getNewCoupon } from './logic.ts';
+import { Coupon } from '../../../../../../types.ts';
+import { defaultNewCoupon } from '../../data.ts';
+import { getNewCoupon } from '../../logic.ts';
 
 export type CouponFieldName =
   | 'name'

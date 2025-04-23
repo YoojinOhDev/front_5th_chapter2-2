@@ -1,5 +1,5 @@
 import { Coupon } from '../../../../types.ts';
-import { CouponFieldName } from './hook.ts';
+import { CouponFieldName } from './components/AddCoupon/hook.ts';
 
 export function getNewCoupon(
   prevCoupon: Coupon,
