@@ -1,6 +1,6 @@
 import { Cart } from '../../../../types.ts';
 import { RemoveFromCart, UpdateQuantity } from '../../../hooks';
-import { getFullNumberPercent } from '../../../utils.ts';
+import { getWholeNumberPercent } from '../../../utils.ts';
 import { getMaxApplicableDiscount } from '../../../models/cart.ts';
 
 interface Props {
@@ -32,7 +32,7 @@ export const CartDisplay = ({
                   {item.product.price}원 x {item.quantity}
                   {appliedDiscount > 0 && (
                     <span className='text-green-600 ml-1'>
-                      ({getFullNumberPercent(appliedDiscount)}% 할인 적용)
+                      ({getWholeNumberPercent(appliedDiscount)}% 할인 적용)
                     </span>
                   )}
                 </span>

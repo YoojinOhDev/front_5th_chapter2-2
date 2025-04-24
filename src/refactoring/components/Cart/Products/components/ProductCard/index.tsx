@@ -3,7 +3,7 @@ import { AddToCart } from '../../../../../hooks';
 import { Product } from '../../../../../../types.ts';
 import {
   convertToLocaleString,
-  getFullNumberPercent,
+  getWholeNumberPercent,
 } from '../../../../../utils.ts';
 import { hasDiscount } from '../../../../../models/products.ts';
 
@@ -35,7 +35,7 @@ export const ProductCard = ({ product, remainingStock, addToCart }: Props) => {
         </span>
         {hasDiscount(product) && (
           <span className='ml-2 font-medium text-blue-600'>
-            최대 {getFullNumberPercent(getMaxDiscountRate(product.discounts))}%
+            최대 {getWholeNumberPercent(getMaxDiscountRate(product.discounts))}%
             할인
           </span>
         )}
@@ -44,8 +44,8 @@ export const ProductCard = ({ product, remainingStock, addToCart }: Props) => {
         <ul className='list-disc list-inside text-sm text-gray-500 mb-2'>
           {product.discounts.map((discount, index) => (
             <li key={index}>
-              {discount.quantity}개 이상: {getFullNumberPercent(discount.rate)}%
-              할인
+              {discount.quantity}개 이상: {getWholeNumberPercent(discount.rate)}
+              % 할인
             </li>
           ))}
         </ul>

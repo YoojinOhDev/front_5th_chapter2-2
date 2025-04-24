@@ -7,7 +7,7 @@ import { Coupon, Product, Cart, Discount } from '../../types';
 import {
   convertToLocaleString,
   getPercent,
-  getFullNumberPercent,
+  getWholeNumberPercent,
 } from '../../refactoring/utils';
 import {
   findCartItemById,
@@ -300,11 +300,11 @@ describe('advanced > ', () => {
         expect(getPercent(0)).toBe(0);
       });
 
-      test('getFullNumberPercent 함수는 소수를 정수 백분율 문자열로 변환해야 한다', () => {
-        expect(getFullNumberPercent(0.1)).toBe('10');
-        expect(getFullNumberPercent(0.256)).toBe('26');
-        expect(getFullNumberPercent(1)).toBe('100');
-        expect(getFullNumberPercent(0)).toBe('0');
+      test('getWholeNumberPercent 함수는 소수를 정수 백분율 문자열로 변환해야 한다', () => {
+        expect(getWholeNumberPercent(0.1)).toBe('10');
+        expect(getWholeNumberPercent(0.256)).toBe('26');
+        expect(getWholeNumberPercent(1)).toBe('100');
+        expect(getWholeNumberPercent(0)).toBe('0');
       });
     });
 
