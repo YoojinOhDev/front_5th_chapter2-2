@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Product } from '../../../../../../types.ts';
 import { EditProduct } from './component/EditProduct';
 import { useHandleEdit } from './hooks.ts';
-import { getPercent } from '../../../../../utils.ts';
+import { DisplayProduct } from './component/DisplayProduct';
 
 interface Props {
   onProductUpdate: (updatedProduct: Product) => void;
@@ -38,23 +38,7 @@ export const EachProduct = ({ onProductUpdate, product, index }: Props) => {
                 saveEditing={saveEditing}
               />
             ) : (
-              <div>
-                {product.discounts.map((discount, index) => (
-                  <div key={index} className='mb-2'>
-                    <span>
-                      {discount.quantity}개 이상 구매 시{' '}
-                      {getPercent(discount.rate)}% 할인
-                    </span>
-                  </div>
-                ))}
-                <button
-                  data-testid='modify-button'
-                  onClick={startEditing}
-                  className='bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600 mt-2'
-                >
-                  수정
-                </button>
-              </div>
+              <DisplayProduct product={product} startEditing={startEditing} />
             )}
           </div>
         )}
